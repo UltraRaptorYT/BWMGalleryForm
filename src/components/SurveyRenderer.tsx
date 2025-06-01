@@ -9,6 +9,7 @@ type Props = {
   item: SurveyQuestionType;
   value: SurveyValue;
   lang?: "en" | "ch";
+  showBothLangs?: boolean;
   onChange: (val: SurveyValue) => void;
   questionNumber: number;
 };
@@ -18,8 +19,15 @@ export function SurveyRenderer({
   value,
   lang = "en",
   onChange,
+  showBothLangs,
   questionNumber,
 }: Props) {
+  const renderText = (
+    text: { en: string; ch: string },
+    showBothLangs?: boolean,
+    lang: "en" | "ch" = "en"
+  ) => (showBothLangs ? `${text.en} / ${text.ch}` : text[lang]);
+
   if (item.qnType === "multi-select") {
     const current = Array.isArray(value) ? value : [];
 
@@ -27,7 +35,7 @@ export function SurveyRenderer({
       <div className="space-y-4">
         <Label className="text-xl flex-wrap">
           <span className="mr-2">{`Q${questionNumber}.`}</span>
-          <span>{item.question[lang]}</span>
+          <span>{renderText(item.question, showBothLangs, lang)}</span>
         </Label>
 
         <div className="grid grid-cols-2 gap-2">
@@ -58,7 +66,7 @@ export function SurveyRenderer({
       <div className="space-y-2">
         <Label className="text-xl flex-wrap">
           <span className="mr-2">{`Q${questionNumber}.`}</span>
-          <span>{item.question[lang]}</span>
+          <span>{renderText(item.question, showBothLangs, lang)}</span>
         </Label>
         <Textarea
           className="text-lg placeholder:text-lg md:text-lg h-36"
@@ -78,7 +86,7 @@ export function SurveyRenderer({
       <div className="space-y-4">
         <Label className="text-xl flex-wrap">
           <span className="mr-2">{`Q${questionNumber}.`}</span>
-          <span>{item.question[lang]}</span>
+          <span>{renderText(item.question, showBothLangs, lang)}</span>
         </Label>
         <div className="flex items-center gap-4 justify-center">
           <span className="text-base text-gray-600">{labelMin[lang]}</span>
@@ -111,7 +119,7 @@ export function SurveyRenderer({
       <div className="space-y-4">
         <Label className="text-xl flex-wrap">
           <span className="mr-2">{`Q${questionNumber}.`}</span>
-          <span>{item.question[lang]}</span>
+          <span>{renderText(item.question, showBothLangs, lang)}</span>
         </Label>
         <div className="flex gap-6 text-lg justify-center">
           <label className="flex items-center gap-2">

@@ -71,19 +71,19 @@ const survey: SurveyQuestionType[] = [
   },
 ];
 
-export default function SurveyFormPage() {
+export default function FeedbackFormPage() {
   const [step, setStep] = useState(0);
   const [responses, setResponses] = useState<Record<string, any>>({});
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem("surveyForm");
+    const saved = localStorage.getItem("feedbackForm");
     if (saved) setResponses(JSON.parse(saved));
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("surveyForm", JSON.stringify(responses));
+    localStorage.setItem("feedbackForm", JSON.stringify(responses));
   }, [responses]);
 
   const renderStep = () => {
@@ -92,14 +92,19 @@ export default function SurveyFormPage() {
     if (item.qnType === "multi-select") {
       return (
         <div className="space-y-4">
-          <Label>
-            {`Q${step}.`} {item.question.en} / <b>{item.question.ch}</b>
+          <Label className="text-xl flex-wrap">
+            <span>{`Q${step + 1}.`}</span>
+            <span>{item.question.en}</span>
+            <span> / </span>
+            <span>
+              <b>{item.question.ch}</b>
+            </span>
           </Label>
           <div className="grid grid-cols-2 gap-2">
             {(item.selectionOptions || []).map((opt) => (
               <label
                 key={`${item.key}-${opt.en}`}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 text-lg"
               >
                 <Checkbox
                   checked={responses[item.key]?.includes(opt.en)}
@@ -122,10 +127,16 @@ export default function SurveyFormPage() {
     if (item.qnType === "text") {
       return (
         <div className="space-y-2">
-          <Label>
-            {`Q${step}.`} {item.question.en} / <b>{item.question.ch}</b>
+          <Label className="text-xl flex-wrap">
+            <span>{`Q${step + 1}.`}</span>
+            <span>{item.question.en}</span>
+            <span> / </span>
+            <span>
+              <b>{item.question.ch}</b>
+            </span>
           </Label>
           <Textarea
+            className="text-lg placeholder:text-lg md:text-lg h-36"
             value={responses[item.key] || ""}
             onChange={(e) =>
               setResponses((r) => ({ ...r, [item.key]: e.target.value }))
@@ -159,7 +170,7 @@ export default function SurveyFormPage() {
     });
 
     if (res.ok) {
-      localStorage.removeItem("surveyForm");
+      localStorage.removeItem("feedbackForm");
       setSubmitted(true);
       toast.success("提交成功 / Submitted successfully!");
     } else {
@@ -184,8 +195,8 @@ export default function SurveyFormPage() {
           backgroundSize: "contain",
         }}
       />
-      <Card className="relative z-10 w-full max-w-xl shadow-xl p-6 bg-white">
-        <CardContent>
+      <Card className="relative z-10 w-full max-w-2xl shadow-xl p-6 bg-white">
+        <CardContent className="px-0 md:px-6">
           {submitted ? (
             <div className="text-center text-xl font-semibold text-green-600">
               🎉 Thank you for your feedback!
@@ -198,12 +209,12 @@ export default function SurveyFormPage() {
               <div className="mt-6 flex justify-between">
                 {step > 0 && (
                   <Button variant="secondary" onClick={() => setStep(step - 1)}>
-                    Back
+                    Back / 上
                   </Button>
                 )}
                 {step < survey.length - 1 ? (
                   <Button onClick={() => setStep(step + 1)} className="ml-auto">
-                    Next
+                    Next / 下
                   </Button>
                 ) : (
                   <Button onClick={handleSubmit} disabled={submitting}>

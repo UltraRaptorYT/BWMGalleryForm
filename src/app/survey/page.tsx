@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
-import { SurveyQuestionType } from "@/types";
+import { SurveyQuestionType, SurveyValue } from "@/types";
+import { SurveyRenderer } from "@/components/SurveyRenderer";
 
 // Dynamic Survey Definition
 const survey: SurveyQuestionType[] = [
@@ -54,6 +55,14 @@ const survey: SurveyQuestionType[] = [
   },
   {
     question: {
+      en: "Would you recommend this exhibition to others?",
+      ch: "你会把这个展览推荐给别人吗？",
+    },
+    qnType: "boolean",
+    key: "recommend",
+  },
+  {
+    question: {
       en: "What did you feel before the exhibition?",
       ch: "展览前你有什么感受？",
     },
@@ -76,9 +85,8 @@ const survey: SurveyQuestionType[] = [
 
 export default function SurveyFormPage() {
   const [lang, setLang] = useState<"en" | "ch">("ch");
-
   const [step, setStep] = useState(0);
-  const [responses, setResponses] = useState<Record<string, any>>({});
+  const [responses, setResponses] = useState<Record<string, SurveyValue>>({});
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
@@ -95,24 +103,28 @@ export default function SurveyFormPage() {
     const item = survey[step];
 
     if (item.qnType === "multi-select") {
+      const current = Array.isArray(responses[item.key])
+        ? (responses[item.key] as string[])
+        : [];
+
       return (
         <div className="space-y-4">
-          <Label>
-            {`Q${step + 1}.`} {item.question[lang]}
+          <Label className="text-xl flex-wrap">
+            <span>{`Q${step + 1}.`}</span>
+            <span>{item.question[lang]}</span>
           </Label>
           <div className="grid grid-cols-2 gap-2">
             {(item.selectionOptions || []).map((opt) => (
               <label
                 key={`${item.key}-${opt.en}`}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 text-lg"
               >
                 <Checkbox
-                  checked={responses[item.key]?.includes(opt.en)}
+                  checked={current.includes(opt.en)}
                   onCheckedChange={() => {
-                    const prev = responses[item.key] || [];
-                    const newVal = prev.includes(opt.en)
-                      ? prev.filter((e: string) => e !== opt.en)
-                      : [...prev, opt.en];
+                    const newVal = current.includes(opt.en)
+                      ? current.filter((e) => e !== opt.en)
+                      : [...current, opt.en];
                     setResponses((r) => ({ ...r, [item.key]: newVal }));
                   }}
                 />
@@ -125,13 +137,20 @@ export default function SurveyFormPage() {
     }
 
     if (item.qnType === "text") {
+      const value =
+        typeof responses[item.key] === "string"
+          ? (responses[item.key] as string)
+          : "";
+
       return (
         <div className="space-y-2">
-          <Label>
-            {`Q${step + 1}.`} {item.question[lang]}
+          <Label className="text-xl flex-wrap">
+            <span>{`Q${step + 1}.`}</span>
+            <span>{item.question[lang]}</span>
           </Label>
           <Textarea
-            value={responses[item.key] || ""}
+            className="text-lg placeholder:text-lg md:text-lg h-36"
+            value={value}
             onChange={(e) =>
               setResponses((r) => ({ ...r, [item.key]: e.target.value }))
             }
@@ -143,20 +162,27 @@ export default function SurveyFormPage() {
 
     if (item.qnType === "rating") {
       const { min, max, labelMin, labelMax } = item.scale;
-      const current = responses[item.key];
+      const current =
+        typeof responses[item.key] === "number"
+          ? (responses[item.key] as number)
+          : 0;
 
       return (
         <div className="space-y-4">
-          <Label>
-            {`Q${step + 1}.`} {item.question[lang]}
+          <Label className="text-xl flex-wrap">
+            <span>{`Q${step + 1}.`}</span>
+            <span>{item.question[lang]}</span>
           </Label>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-600">{labelMin[lang]}</span>
+            <span className="text-base text-gray-600">{labelMin[lang]}</span>
             <div className="flex gap-4">
               {Array.from({ length: max - min + 1 }, (_, i) => {
                 const value = i + min;
                 return (
-                  <label key={value} className="flex flex-col items-center">
+                  <label
+                    key={value}
+                    className="flex flex-col items-center text-lg"
+                  >
                     <input
                       type="radio"
                       name={item.key}
@@ -171,7 +197,47 @@ export default function SurveyFormPage() {
                 );
               })}
             </div>
-            <span className="text-sm text-gray-600">{labelMax[lang]}</span>
+            <span className="text-base text-gray-600">{labelMax[lang]}</span>
+          </div>
+        </div>
+      );
+    }
+
+    if (item.qnType === "boolean") {
+      const current =
+        typeof responses[item.key] === "boolean" ? responses[item.key] : null;
+
+      return (
+        <div className="space-y-4">
+          <Label className="text-xl flex-wrap">
+            <span>{`Q${step + 1}.`}</span>
+            <span>{item.question[lang]}</span>
+          </Label>
+          <div className="flex gap-6 text-lg">
+            <label className="flex items-center gap-2">
+              <input
+                type="radio"
+                name={item.key}
+                value="true"
+                checked={current === true}
+                onChange={() =>
+                  setResponses((r) => ({ ...r, [item.key]: true }))
+                }
+              />
+              {lang === "en" ? "Yes" : "是"}
+            </label>
+            <label className="flex items-center gap-2">
+              <input
+                type="radio"
+                name={item.key}
+                value="false"
+                checked={current === false}
+                onChange={() =>
+                  setResponses((r) => ({ ...r, [item.key]: false }))
+                }
+              />
+              {lang === "en" ? "No" : "否"}
+            </label>
           </div>
         </div>
       );
@@ -183,8 +249,16 @@ export default function SurveyFormPage() {
   const handleSubmit = async () => {
     const incomplete = survey.some((item) => {
       const val = responses[item.key];
-      if (item.qnType === "multi-select") return !val || val.length === 0;
-      return !val || !val.trim();
+      if (item.qnType === "multi-select") {
+        return !Array.isArray(val) || val.length === 0;
+      }
+      if (item.qnType === "text") {
+        return typeof val !== "string" || val.trim() === "";
+      }
+      if (item.qnType === "rating") {
+        return typeof val !== "number";
+      }
+      return true;
     });
 
     if (incomplete) {
@@ -235,7 +309,7 @@ export default function SurveyFormPage() {
       </div>
 
       <Card className="relative z-10 w-full max-w-xl shadow-xl p-6 bg-white">
-        <CardContent>
+        <CardContent className="px-0 md:px-6">
           {submitted ? (
             <div className="text-center text-xl font-semibold text-green-600">
               🎉 Thank you for your feedback!
@@ -244,16 +318,25 @@ export default function SurveyFormPage() {
             </div>
           ) : (
             <>
-              {renderStep()}
+              <SurveyRenderer
+                item={survey[step]}
+                value={responses[survey[step].key]}
+                lang={lang}
+                onChange={(val) =>
+                  setResponses((r) => ({ ...r, [survey[step].key]: val }))
+                }
+                questionNumber={step + 1}
+              />
+
               <div className="mt-6 flex justify-between">
                 {step > 0 && (
                   <Button variant="secondary" onClick={() => setStep(step - 1)}>
-                    Back
+                    Back / 上
                   </Button>
                 )}
                 {step < survey.length - 1 ? (
                   <Button onClick={() => setStep(step + 1)} className="ml-auto">
-                    Next
+                    Next / 下
                   </Button>
                 ) : (
                   <Button onClick={handleSubmit} disabled={submitting}>

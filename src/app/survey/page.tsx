@@ -13,6 +13,47 @@ import { SurveyQuestionType } from "@/types";
 const survey: SurveyQuestionType[] = [
   {
     question: {
+      en: "Your Message",
+      ch: "您如何描述本次「光影」摄影展的整体体验？",
+    },
+    qnType: "text",
+    placeholder: { en: "Write your thoughts...", ch: "placeholder" },
+    key: "describeExperience",
+  },
+  {
+    question: {
+      en: "How do you feel after the exhibition?",
+      ch: "您认为本次展览在多大程度上符合您对「疗愈人心、给人希望」主题的期待？",
+    },
+    qnType: "rating",
+    key: "rating",
+    scale: {
+      min: 1,
+      max: 5,
+      labelMin: { en: "完全不符合", ch: "完全不符合" },
+      labelMax: { en: "完全符合", ch: "完全符合" },
+    },
+  },
+  {
+    question: {
+      en: "Your Message",
+      ch: "留言",
+    },
+    qnType: "text",
+    key: "message",
+    placeholder: { en: "Write your thoughts...", ch: "placeholder" },
+  },
+  {
+    question: {
+      en: "Any feedback?",
+      ch: "其他意见",
+    },
+    qnType: "text",
+    key: "feedback",
+    placeholder: { en: "Write your thoughts...", ch: "placeholder" },
+  },
+  {
+    question: {
       en: "What did you feel before the exhibition?",
       ch: "展览前你有什么感受？",
     },
@@ -31,47 +72,11 @@ const survey: SurveyQuestionType[] = [
       { en: "Curious", ch: "好奇" },
     ],
   },
-  {
-    question: {
-      en: "How do you feel after the exhibition?",
-      ch: "展览后你有什么感受？",
-    },
-    qnType: "multi-select",
-    key: "after",
-    selectionOptions: [
-      { en: "Excited", ch: "兴奋" },
-      { en: "Anxious", ch: "焦虑" },
-      { en: "Happy", ch: "开心" },
-      { en: "Confused", ch: "困惑" },
-      { en: "Hopeful", ch: "充满希望" },
-      { en: "Overwhelmed", ch: "不知所措" },
-      { en: "Inspired", ch: "受到启发" },
-      { en: "Indifferent", ch: "无动于衷" },
-      { en: "Grateful", ch: "感激" },
-      { en: "Curious", ch: "好奇" },
-    ],
-  },
-  {
-    question: {
-      en: "Your Message",
-      ch: "留言",
-    },
-    qnType: "text",
-    placeholder: { en: "Write your thoughts...", ch: "placeholder" },
-    key: "message",
-  },
-  {
-    question: {
-      en: "Any feedback?",
-      ch: "其他意见",
-    },
-    qnType: "text",
-    placeholder: { en: "Write your thoughts...", ch: "placeholder" },
-    key: "feedback",
-  },
 ];
 
 export default function SurveyFormPage() {
+  const [lang, setLang] = useState<"en" | "ch">("ch");
+
   const [step, setStep] = useState(0);
   const [responses, setResponses] = useState<Record<string, any>>({});
   const [submitted, setSubmitted] = useState(false);
@@ -93,7 +98,7 @@ export default function SurveyFormPage() {
       return (
         <div className="space-y-4">
           <Label>
-            {`Q${step}.`} {item.question.en} / <b>{item.question.ch}</b>
+            {`Q${step + 1}.`} {item.question[lang]}
           </Label>
           <div className="grid grid-cols-2 gap-2">
             {(item.selectionOptions || []).map((opt) => (
@@ -111,7 +116,7 @@ export default function SurveyFormPage() {
                     setResponses((r) => ({ ...r, [item.key]: newVal }));
                   }}
                 />
-                {opt.en} / {opt.ch}
+                {opt[lang]}
               </label>
             ))}
           </div>
@@ -123,15 +128,51 @@ export default function SurveyFormPage() {
       return (
         <div className="space-y-2">
           <Label>
-            {`Q${step}.`} {item.question.en} / <b>{item.question.ch}</b>
+            {`Q${step + 1}.`} {item.question[lang]}
           </Label>
           <Textarea
             value={responses[item.key] || ""}
             onChange={(e) =>
               setResponses((r) => ({ ...r, [item.key]: e.target.value }))
             }
-            placeholder="Write your thoughts..."
+            placeholder={item.placeholder[lang]}
           />
+        </div>
+      );
+    }
+
+    if (item.qnType === "rating") {
+      const { min, max, labelMin, labelMax } = item.scale;
+      const current = responses[item.key];
+
+      return (
+        <div className="space-y-4">
+          <Label>
+            {`Q${step + 1}.`} {item.question[lang]}
+          </Label>
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-gray-600">{labelMin[lang]}</span>
+            <div className="flex gap-4">
+              {Array.from({ length: max - min + 1 }, (_, i) => {
+                const value = i + min;
+                return (
+                  <label key={value} className="flex flex-col items-center">
+                    <input
+                      type="radio"
+                      name={item.key}
+                      value={value}
+                      checked={current === value}
+                      onChange={() =>
+                        setResponses((r) => ({ ...r, [item.key]: value }))
+                      }
+                    />
+                    <span className="text-sm">{value}</span>
+                  </label>
+                );
+              })}
+            </div>
+            <span className="text-sm text-gray-600">{labelMax[lang]}</span>
+          </div>
         </div>
       );
     }
@@ -152,7 +193,7 @@ export default function SurveyFormPage() {
     }
 
     setSubmitting(true);
-    const res = await fetch("/api/submit?submitType=feedback", {
+    const res = await fetch("/api/submit?submitType=survey", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(responses),
@@ -184,6 +225,15 @@ export default function SurveyFormPage() {
           backgroundSize: "contain",
         }}
       />
+      <div className="absolute top-4 right-4 z-20">
+        <Button
+          variant="outline"
+          onClick={() => setLang(lang === "en" ? "ch" : "en")}
+        >
+          {lang === "en" ? "中文" : "EN"}
+        </Button>
+      </div>
+
       <Card className="relative z-10 w-full max-w-xl shadow-xl p-6 bg-white">
         <CardContent>
           {submitted ? (

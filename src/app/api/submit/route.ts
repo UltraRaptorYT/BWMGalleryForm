@@ -32,7 +32,9 @@ export async function POST(req: Request) {
   const sheets = google.sheets({ version: "v4", auth });
 
   try {
-    const timestamp = new Date().toISOString();
+    const timestamp = new Date().toLocaleString("en-US", {
+      timeZone: "Asia/Singapore",
+    });
     await sheets.spreadsheets.values.append({
       spreadsheetId: SHEET_ID,
       range: `${SHEET_NAME}!A:${numberToLetters(Object.keys(data).length)}`,

@@ -26,6 +26,11 @@ export type SurveyQuestionType =
       qnType: "boolean";
       key: string;
       question: { en: string; ch: string };
+    }
+  | {
+      qnType: "info";
+      key: string;
+      message: { en: string; ch: string };
     };
 
 export type SurveyValue = string | number | string[] | boolean;

@@ -10,6 +10,14 @@ import { SurveyRenderer } from "@/components/SurveyRenderer";
 // Dynamic Survey Definition
 const survey: SurveyQuestionType[] = [
   {
+    qnType: "info",
+    key: "intro",
+    message: {
+      en: "Welcome to our exhibition feedback form! Please answer a few questions to help us improve.",
+      ch: "欢迎填写展览反馈表！请回答以下问题，帮助我们改进。",
+    },
+  },
+  {
     question: {
       en: "Your Message",
       ch: "您如何描述本次「光影」摄影展的整体体验？",
@@ -98,6 +106,7 @@ export default function SurveyFormPage() {
 
   const handleSubmit = async () => {
     const incomplete = survey.some((item) => {
+      if (item.qnType === "info") return false;
       const val = responses[item.key];
       if (item.qnType === "multi-select") {
         return !Array.isArray(val) || val.length === 0;
@@ -161,7 +170,7 @@ export default function SurveyFormPage() {
         </Button>
       </div>
 
-      <Card className="relative z-10 w-full max-w-xl shadow-xl p-6 bg-white">
+      <Card className="relative z-10 w-full max-w-2xl shadow-xl p-6 bg-white">
         <CardContent className="px-0 md:px-6">
           {submitted ? (
             <div className="text-center text-xl font-semibold text-green-600">

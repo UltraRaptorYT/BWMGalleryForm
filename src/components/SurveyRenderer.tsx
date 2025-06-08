@@ -147,5 +147,14 @@ export function SurveyRenderer({
     );
   }
 
+  if (item.qnType === "info") {
+    return (
+      <div className="text-center text-xl text-gray-700 p-4">
+        <p>{item.message.en}</p>
+        <p className="mt-2 text-gray-500">{item.message.ch}</p>
+      </div>
+    );
+  }
+
   return null;
 }

@@ -10,6 +10,14 @@ import { SurveyRenderer } from "@/components/SurveyRenderer";
 // Dynamic Survey Definition
 const survey: SurveyQuestionType[] = [
   {
+    qnType: "info",
+    key: "intro",
+    message: {
+      en: "Welcome to our exhibition feedback form! Please answer a few questions to help us improve.",
+      ch: "欢迎填写展览反馈表！请回答以下问题，帮助我们改进。",
+    },
+  },
+  {
     question: {
       en: "What did you feel before the exhibition?",
       ch: "展览前你有什么感受？",
@@ -86,6 +94,7 @@ export default function FeedbackFormPage() {
 
   const handleSubmit = async () => {
     const incomplete = survey.some((item) => {
+      if (item.qnType === "info") return false;
       const val = responses[item.key];
       if (item.qnType === "multi-select") {
         return !Array.isArray(val) || val.length === 0;

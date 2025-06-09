@@ -6,15 +6,23 @@ import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import { SurveyQuestionType, SurveyValue } from "@/types";
 import { SurveyRenderer } from "@/components/SurveyRenderer";
+import { useSurveySubmit } from "@/hooks/useSurveySubmit";
 
-// Dynamic Survey Definition
 const survey: SurveyQuestionType[] = [
   {
     qnType: "info",
     key: "intro",
     message: {
-      en: "Welcome to our exhibition feedback form! Please answer a few questions to help us improve.",
-      ch: "欢迎填写展览反馈表！请回答以下问题，帮助我们改进。",
+      en: `Hi and welcome! Thanks so much for being here. We invited you because we believe art has a
+special way of reaching people — stirring emotions, bringing up memories, or even helping us
+feel a little lighter inside.
+There’s no right or wrong answer today—just your thoughts and feelings. Whatever you share
+stays anonymous and helps us better understand how art can touch people’s hearts and support
+emotional healing.`,
+      ch: `您好，欢迎来到今天的活动！很感谢您抽空来参加。我们相信艺术有一种特殊的力量，能
+触动内心、唤起回忆，甚至让人感觉轻松一些。
+这里没有标准答案，只需说出您真实的感受就好。所有分享都会保密，我们希望透过这样
+的交流，更了解艺术是怎么影响人、疗愈心灵的。`,
     },
   },
   {
@@ -79,62 +87,19 @@ const survey: SurveyQuestionType[] = [
 
 export default function FeedbackFormPage() {
   const [step, setStep] = useState(0);
-  const [responses, setResponses] = useState<Record<string, SurveyValue>>({});
-  const [submitted, setSubmitted] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
+
+  const storageKey = "feedbackForm";
+
+  const { responses, updateResponse, handleSubmit, submitting, submitted } =
+    useSurveySubmit({
+      survey,
+      submitUrl: "/api/submit?submitType=feedback",
+      storageKey: storageKey,
+    });
 
   useEffect(() => {
-    const saved = localStorage.getItem("feedbackForm");
-    if (saved) setResponses(JSON.parse(saved));
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("feedbackForm", JSON.stringify(responses));
+    localStorage.setItem(storageKey, JSON.stringify(responses));
   }, [responses]);
-
-  const handleSubmit = async () => {
-    const incomplete = survey.some((item) => {
-      if (item.qnType === "info") return false;
-      const val = responses[item.key];
-      if (item.qnType === "multi-select") {
-        return !Array.isArray(val) || val.length === 0;
-      }
-      if (item.qnType === "text") {
-        return typeof val !== "string" || val.trim() === "";
-      }
-      if (item.qnType === "rating") {
-        return typeof val !== "number";
-      }
-      if (item.qnType === "boolean") {
-        return typeof val !== "boolean";
-      }
-      return true;
-    });
-
-    if (incomplete) {
-      toast.error("请完整填写所有问题 / Please complete all questions.");
-      return;
-    }
-
-    setSubmitting(true);
-    const res = await fetch("/api/submit?submitType=feedback", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(responses),
-    });
-
-    if (res.ok) {
-      localStorage.removeItem("feedbackForm");
-      setSubmitted(true);
-      toast.success("提交成功 / Submitted successfully!");
-    } else {
-      toast.error(
-        "提交失败，请稍后重试 / Submission failed. Please try again later."
-      );
-    }
-
-    setSubmitting(false);
-  };
 
   return (
     <main
@@ -162,9 +127,7 @@ export default function FeedbackFormPage() {
               <SurveyRenderer
                 item={survey[step]}
                 value={responses[survey[step].key]}
-                onChange={(val) =>
-                  setResponses((r) => ({ ...r, [survey[step].key]: val }))
-                }
+                onChange={(val) => updateResponse(survey[step].key, val)}
                 questionNumber={step + 1}
                 showBothLangs={true}
               />

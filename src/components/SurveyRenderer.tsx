@@ -35,7 +35,12 @@ export function SurveyRenderer({
       <div className="space-y-4">
         <Label className="text-xl flex-wrap">
           <span className="mr-2">{`Q${questionNumber}.`}</span>
-          <span>{renderText(item.question, showBothLangs, lang)}</span>
+          <span>
+            {renderText(item.question, showBothLangs, lang)}
+            {item.required !== false && (
+              <span className="text-red-500 ml-1">*</span>
+            )}
+          </span>
         </Label>
 
         <div className="grid grid-cols-2 gap-2">
@@ -66,7 +71,12 @@ export function SurveyRenderer({
       <div className="space-y-2">
         <Label className="text-xl flex-wrap">
           <span className="mr-2">{`Q${questionNumber}.`}</span>
-          <span>{renderText(item.question, showBothLangs, lang)}</span>
+          <span>
+            {renderText(item.question, showBothLangs, lang)}
+            {item.required !== false && (
+              <span className="text-red-500 ml-1">*</span>
+            )}
+          </span>
         </Label>
         <Textarea
           className="text-lg placeholder:text-lg md:text-lg h-36"
@@ -86,7 +96,12 @@ export function SurveyRenderer({
       <div className="space-y-4">
         <Label className="text-xl flex-wrap">
           <span className="mr-2">{`Q${questionNumber}.`}</span>
-          <span>{renderText(item.question, showBothLangs, lang)}</span>
+          <span>
+            {renderText(item.question, showBothLangs, lang)}
+            {item.required !== false && (
+              <span className="text-red-500 ml-1">*</span>
+            )}
+          </span>
         </Label>
         <div className="flex items-center gap-4 justify-center">
           <span className="text-base text-gray-600">{labelMin[lang]}</span>
@@ -119,7 +134,12 @@ export function SurveyRenderer({
       <div className="space-y-4">
         <Label className="text-xl flex-wrap">
           <span className="mr-2">{`Q${questionNumber}.`}</span>
-          <span>{renderText(item.question, showBothLangs, lang)}</span>
+          <span>
+            {renderText(item.question, showBothLangs, lang)}
+            {item.required !== false && (
+              <span className="text-red-500 ml-1">*</span>
+            )}
+          </span>
         </Label>
         <div className="flex gap-6 text-lg justify-center">
           <label className="flex items-center gap-2">
@@ -149,9 +169,40 @@ export function SurveyRenderer({
 
   if (item.qnType === "info") {
     return (
-      <div className="text-center text-xl text-gray-700 p-4">
-        <p>{item.message.en}</p>
-        <p className="mt-2 text-gray-500">{item.message.ch}</p>
+      <div className="text-left text-xl p-4">
+        <p>{renderText(item.message, showBothLangs, lang)}</p>
+      </div>
+    );
+  }
+
+  if (item.qnType === "radio") {
+    const current = typeof value === "string" ? value : "";
+
+    return (
+      <div className="space-y-4">
+        <Label className="text-xl flex-wrap">
+          <span className="mr-2">{`Q${questionNumber}.`}</span>
+          <span>
+            {renderText(item.question, showBothLangs, lang)}
+            {item.required !== false && (
+              <span className="text-red-500 ml-1">*</span>
+            )}
+          </span>
+        </Label>
+        <div className="flex gap-6 text-lg justify-center">
+          {item.options.map((opt) => (
+            <label key={opt.value} className="flex items-center gap-2">
+              <input
+                type="radio"
+                name={item.key}
+                value={opt.value}
+                checked={current === opt.value}
+                onChange={() => onChange(opt.value)}
+              />
+              {opt.label[lang]}
+            </label>
+          ))}
+        </div>
       </div>
     );
   }

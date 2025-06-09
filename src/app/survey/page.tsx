@@ -6,147 +6,229 @@ import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import { SurveyQuestionType, SurveyValue } from "@/types";
 import { SurveyRenderer } from "@/components/SurveyRenderer";
+import { useSurveySubmit } from "@/hooks/useSurveySubmit";
 
-// Dynamic Survey Definition
 const survey: SurveyQuestionType[] = [
   {
     qnType: "info",
     key: "intro",
     message: {
-      en: "Welcome to our exhibition feedback form! Please answer a few questions to help us improve.",
-      ch: "欢迎填写展览反馈表！请回答以下问题，帮助我们改进。",
+      en: `Hi and welcome! Thanks so much for being here. We invited you because we believe art has a
+special way of reaching people — stirring emotions, bringing up memories, or even helping us
+feel a little lighter inside.
+There’s no right or wrong answer today—just your thoughts and feelings. Whatever you share
+stays anonymous and helps us better understand how art can touch people’s hearts and support
+emotional healing.`,
+      ch: `您好，欢迎来到今天的活动！很感谢您抽空来参加。我们相信艺术有一种特殊的力量，能
+触动内心、唤起回忆，甚至让人感觉轻松一些。
+这里没有标准答案，只需说出您真实的感受就好。所有分享都会保密，我们希望透过这样
+的交流，更了解艺术是怎么影响人、疗愈心灵的。`,
     },
   },
   {
     question: {
-      en: "Your Message",
-      ch: "您如何描述本次「光影」摄影展的整体体验？",
+      en: "Your Name",
+      ch: "您的姓名",
     },
     qnType: "text",
-    placeholder: { en: "Write your thoughts...", ch: "placeholder" },
-    key: "describeExperience",
+    placeholder: { en: "Name", ch: "姓名" },
+    key: "name",
+    required: true,
+  },
+  {
+    qnType: "radio",
+    key: "gender",
+    question: {
+      en: "Your Gender",
+      ch: "您的性别",
+    },
+    options: [
+      { value: "male", label: { en: "Male", ch: "男" } },
+      { value: "female", label: { en: "Female", ch: "女" } },
+    ],
   },
   {
     question: {
-      en: "How do you feel after the exhibition?",
+      en: "Your Occupation",
+      ch: "您的职业",
+    },
+    qnType: "text",
+    placeholder: { en: "Occupation", ch: "职业" },
+    key: "occupation",
+  },
+  {
+    question: {
+      en: "Are you a member of BWM?",
+      ch: "请问您是寺院的学院吗？",
+    },
+    qnType: "boolean",
+    key: "student",
+  },
+  {
+    question: {
+      en: "What were you feeling when you first saw the artwork?",
+      ch: "一开始看到作品时，您有什么感觉？",
+    },
+    qnType: "multi-select",
+    key: "firstTimeEmotionalImpact",
+    selectionOptions: [
+      { en: "Warmth", ch: "温暖" },
+      { en: "Optimism", ch: "乐观" },
+      { en: "Peace", ch: "平静" },
+      { en: "Gratitude", ch: "感恩" },
+      { en: "Hope", ch: "希望" },
+      { en: "Inspired", ch: "激励" },
+      { en: "Joy", ch: "喜悦" },
+      { en: "Ease", ch: "轻松" },
+    ],
+  },
+  {
+    question: {
+      en: "Did your feelings change as you spent more time with it?",
+      ch: "随著观赏的时间变长，这些感受有改变吗？",
+    },
+    qnType: "boolean",
+    key: "feelingChangeEmotionalImpact",
+  },
+  {
+    question: {
+      en: "Did any of the pieces bring up strong emotions or remind you of something personal?",
+      ch: "有没有哪件作品让您情绪特别强烈，或让您想起自己生活中的某些经历？",
+    },
+    qnType: "boolean",
+    key: "artEmotionsEmotionalImpact",
+  },
+  {
+    question: {
+      en: "Did the art help you notice anything inside yourself you hadn’t realized before?",
+      ch: "这些作品有没有让您发现自己内心一些没注意过的想法或感受？",
+    },
+    qnType: "boolean",
+    key: "innerSelfInnerResonance",
+  },
+  {
+    question: {
+      en: "If yes, can you share a bit about that?",
+      ch: "如果有，您願意簡單分享一下嗎？",
+    },
+    qnType: "text",
+    placeholder: {
+      en: "Feel free to share your thoughts...",
+      ch: "請簡單分享您的想法或感受…",
+    },
+    required: false,
+    key: "innerSelfTrue",
+  },
+  {
+    question: {
+      en: "Why do you think this piece connected (or didn’t connect) with you?",
+      ch: "您觉得为什么这件作品会（或不会）让您产生共鸣？",
+    },
+    qnType: "text",
+    placeholder: { en: "Reason", ch: "原因" },
+    key: "artPieceInnerResonance",
+  },
+  {
+    question: {
+      en: "Did you feel calm, comforted, or gain any new insight while looking at the art?",
+      ch: "在观赏过程中，您有感到平静、安慰，或产生什么新的想法吗？",
+    },
+    qnType: "boolean",
+    key: "gainNewInsightSenseOfHealing",
+  },
+  {
+    question: {
+      en: "Was there anything that felt especially healing to you?",
+      ch: "哪个部分让您特别有疗愈的感觉？",
+    },
+    qnType: "text",
+    placeholder: { en: "Reason", ch: "原因" },
+    key: "artPieceSenseOfHealing",
+  },
+  {
+    question: {
+      en: "Do you usually look for certain messages or feelings in art?",
+      ch: "您平常会从艺术作品中寻找某些讯息或情感吗？",
+    },
+    qnType: "boolean",
+    key: "artAppreciationSenseOfHealing",
+  },
+  {
+    question: {
+      en: "Did this experience make you think about your relationships—family, friends, or community?",
+      ch: "有没有哪个作品，让您想到与家人、朋友或社区的关系？",
+    },
+    qnType: "boolean",
+    key: "thinkRelationshipsAndLifeReflection",
+  },
+  {
+    question: {
+      en: "Did it inspire you to think or live a little differently?",
+      ch: "看完之后，是否让您对生活或人际关系有些新的想法或改变？",
+    },
+    qnType: "boolean",
+    key: "changeRelationshipsAndLifeReflection",
+  },
+  {
+    question: {
+      en: "Is there anything else you’d like to share from your experience today?",
+      ch: "今天的体验里，还有没有什么是您想补充或分享的？",
+    },
+    qnType: "text",
+    placeholder: { en: "Reason", ch: "原因" },
+    key: "anyClosingThoughts",
+  },
+  {
+    question: {
+      en: "If we offer more events like this in the future, what would you hope to experience?",
+      ch: "如果以后再办类似的活动，您会希望有什么样的内容或感受？",
+    },
+    qnType: "boolean",
+    key: "futureEventsClosingThoughts",
+  },
+
+  {
+    question: {
+      en: "On a scale from 1 to 10, how emotionally meaningful was this experience for you?",
       ch: "您认为本次展览在多大程度上符合您对「疗愈人心、给人希望」主题的期待？",
     },
     qnType: "rating",
-    key: "rating",
+    key: "optionalRating",
     scale: {
       min: 1,
-      max: 5,
-      labelMin: { en: "完全不符合", ch: "完全不符合" },
-      labelMax: { en: "完全符合", ch: "完全符合" },
+      max: 10,
+      labelMin: { en: "Very Unmeaningful", ch: "完全不符合" },
+      labelMax: { en: "Very Meaningful", ch: "完全符合" },
     },
+    required: false,
   },
   {
     question: {
-      en: "Your Message",
-      ch: "留言",
-    },
-    qnType: "text",
-    key: "message",
-    placeholder: { en: "Write your thoughts...", ch: "placeholder" },
-  },
-  {
-    question: {
-      en: "Any feedback?",
-      ch: "其他意见",
-    },
-    qnType: "text",
-    key: "feedback",
-    placeholder: { en: "Write your thoughts...", ch: "placeholder" },
-  },
-  {
-    question: {
-      en: "Would you recommend this exhibition to others?",
-      ch: "你会把这个展览推荐给别人吗？",
+      en: "Would you be interested in joining a similar healing art session again?",
+      ch: "您会想再参加类似的艺术疗愈活动吗？",
     },
     qnType: "boolean",
-    key: "recommend",
-  },
-  {
-    question: {
-      en: "What did you feel before the exhibition?",
-      ch: "展览前你有什么感受？",
-    },
-    qnType: "multi-select",
-    key: "before",
-    selectionOptions: [
-      { en: "Excited", ch: "兴奋" },
-      { en: "Anxious", ch: "焦虑" },
-      { en: "Happy", ch: "开心" },
-      { en: "Confused", ch: "困惑" },
-      { en: "Hopeful", ch: "充满希望" },
-      { en: "Overwhelmed", ch: "不知所措" },
-      { en: "Inspired", ch: "受到启发" },
-      { en: "Indifferent", ch: "无动于衷" },
-      { en: "Grateful", ch: "感激" },
-      { en: "Curious", ch: "好奇" },
-    ],
+    key: "optionalEvent",
+    required: false,
   },
 ];
 
 export default function SurveyFormPage() {
   const [lang, setLang] = useState<"en" | "ch">("ch");
   const [step, setStep] = useState(0);
-  const [responses, setResponses] = useState<Record<string, SurveyValue>>({});
-  const [submitted, setSubmitted] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
+
+  const storageKey = "surveyForm";
+
+  const { responses, updateResponse, handleSubmit, submitting, submitted } =
+    useSurveySubmit({
+      survey,
+      submitUrl: "/api/submit?submitType=survey",
+      storageKey: storageKey,
+    });
 
   useEffect(() => {
-    const saved = localStorage.getItem("surveyForm");
-    if (saved) setResponses(JSON.parse(saved));
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("surveyForm", JSON.stringify(responses));
+    localStorage.setItem(storageKey, JSON.stringify(responses));
   }, [responses]);
-
-  const handleSubmit = async () => {
-    const incomplete = survey.some((item) => {
-      if (item.qnType === "info") return false;
-      const val = responses[item.key];
-      if (item.qnType === "multi-select") {
-        return !Array.isArray(val) || val.length === 0;
-      }
-      if (item.qnType === "text") {
-        return typeof val !== "string" || val.trim() === "";
-      }
-      if (item.qnType === "rating") {
-        return typeof val !== "number";
-      }
-      if (item.qnType === "boolean") {
-        return typeof val !== "boolean";
-      }
-      return true;
-    });
-
-    if (incomplete) {
-      toast.error("请完整填写所有问题 / Please complete all questions.");
-      return;
-    }
-
-    setSubmitting(true);
-    const res = await fetch("/api/submit?submitType=survey", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(responses),
-    });
-
-    if (res.ok) {
-      localStorage.removeItem("surveyForm");
-      setSubmitted(true);
-      toast.success("提交成功 / Submitted successfully!");
-    } else {
-      toast.error(
-        "提交失败，请稍后重试 / Submission failed. Please try again later."
-      );
-    }
-
-    setSubmitting(false);
-  };
 
   return (
     <main
@@ -184,9 +266,7 @@ export default function SurveyFormPage() {
                 item={survey[step]}
                 value={responses[survey[step].key]}
                 lang={lang}
-                onChange={(val) =>
-                  setResponses((r) => ({ ...r, [survey[step].key]: val }))
-                }
+                onChange={(val) => updateResponse(survey[step].key, val)}
                 questionNumber={step + 1}
               />
 

@@ -237,14 +237,7 @@ export default function SurveyFormPage() {
       className="relative flex items-center justify-center p-4 bg-gray-100 overflow-hidden"
       style={{ minHeight: "var(--full-height)" }}
     >
-      <div
-        className="absolute inset-0 z-0 opacity-30"
-        style={{
-          backgroundImage: "url('/background.png')",
-          backgroundRepeat: "repeat",
-          backgroundSize: "contain",
-        }}
-      />
+      <div className="absolute inset-0 z-0" />
       <div className="absolute top-4 right-4 z-20">
         <Button
           variant="outline"
@@ -254,7 +247,7 @@ export default function SurveyFormPage() {
         </Button>
       </div>
 
-      <Card className="relative z-10 w-full max-w-2xl shadow-xl p-6 bg-white">
+      <Card className="relative z-10 w-full max-w-2xl shadow-xl p-6 bg-white/45">
         <CardContent className="px-0 md:px-6">
           {submitted ? (
             <div className="text-center text-xl font-semibold text-green-600">

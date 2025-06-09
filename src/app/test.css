@@ -1,0 +1,125 @@
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap");
+
+:root {
+  --dark-color: gray;
+  --subtle-color: rgb(208, 213, 213);
+  --main-color: rgb(249, 255, 255);
+}
+
+img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: right top;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+.container {
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 400px;
+  height: 400px;
+  perspective: 500px;
+  perspective-origin: 50% 50%;
+}
+
+.book {
+  position: relative;
+  width: 150px;
+  height: 200px;
+  transform-style: preserve-3d;
+}
+
+.shadow {
+  position: absolute;
+  bottom: 0;
+  width: 160px;
+  box-shadow: 0 8px 16px 8px var(--dark-color);
+  transform: rotateX(10deg);
+}
+
+.book > div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform-origin: top;
+  transition: transform 2s;
+}
+.cover {
+  transform: scaleX(1.05) rotateX(10deg);
+  border: 1px solid var(--dark-color);
+}
+
+.cover-end {
+  transform: translateY(10px) rotateX(10deg);
+  border: 1px solid var(--dark-color);
+}
+
+.page.first {
+  transform: translateY(2px) rotateX(10deg);
+}
+
+.page.second {
+  transform: translateY(4px) rotateX(10deg);
+}
+
+.page.third {
+  transform: translateY(6px) rotateX(10deg);
+}
+
+.page.last {
+  transform: translateY(8px) rotateX(10deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.back {
+  height: 200px;
+  width: 10px;
+  background-color: var(--subtle-color);
+}
+
+.page {
+  background: linear-gradient(
+    to right,
+    var(--subtle-color),
+    20%,
+    var(--main-color)
+  );
+  border: 1px solid var(--subtle-color);
+}
+
+.btn-tale {
+  background-color: transparent;
+  border: none;
+  font-size: 1.5rem;
+  font-family: "Dancing Script", cursive;
+  transition: opacity 1s;
+}
+
+.btn-tale:hover {
+  opacity: 30%;
+}
+.book:hover .cover {
+  transform: rotateX(150deg);
+}
+
+.book:hover .page.first {
+  transform: translateY(2px) rotateX(150deg);
+}
+
+.book:hover .page.second {
+  transform: translateY(4px) rotateX(130deg);
+}
+
+.book:hover .page.third {
+  transform: translateY(6px) rotateX(110deg);
+}

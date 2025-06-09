@@ -1,10 +1,12 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { SurveyQuestionType, SurveyValue } from "@/types";
 import { Heart } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type Props = {
   item: SurveyQuestionType;
@@ -23,6 +25,12 @@ export function SurveyRenderer({
   showBothLangs,
   questionNumber,
 }: Props) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const renderText = (
     text: { en: string; ch: string },
     showBothLangs?: boolean,
@@ -49,6 +57,8 @@ export function SurveyRenderer({
   };
 
   if (item.qnType === "multi-select") {
+    if (!mounted) return null;
+
     const current = Array.isArray(value) ? value : [];
 
     return (
@@ -107,7 +117,11 @@ export function SurveyRenderer({
           </span>
         </Label>
         <Textarea
-          className="text-lg placeholder:text-lg md:text-lg h-36 bg-white/75 border-blue-300"
+          className={cn(
+            "text-lg placeholder:text-lg md:text-lg h-36 bg-white/75 border-blue-300",
+            item.key === "name" &&
+              "font-cursive md:text-3xl text-center placeholder:text-3xl text-3xl"
+          )}
           value={typeof value === "string" ? value : ""}
           onChange={(e) => onChange(e.target.value)}
           placeholder={item.placeholder?.[lang]}

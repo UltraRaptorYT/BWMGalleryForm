@@ -6,8 +6,19 @@ import { Card, CardContent } from "@/components/ui/card";
 import { SurveyQuestionType } from "@/types";
 import { SurveyRenderer } from "@/components/SurveyRenderer";
 import { useSurveySubmit } from "@/hooks/useSurveySubmit";
+import BookFlip from "@/components/BookFlip";
 
 const survey: SurveyQuestionType[] = [
+  {
+    question: {
+      en: "Name",
+      ch: "姓名",
+    },
+    qnType: "text",
+    placeholder: { en: "Enter your name", ch: "请输入您的姓名" },
+    key: "name",
+    required: true,
+  },
   {
     question: {
       en: "What blossomed in your heart after the exhibition?",
@@ -35,6 +46,7 @@ const survey: SurveyQuestionType[] = [
     qnType: "text",
     placeholder: { en: "Pen your thoughts to the artist", ch: "placeholder" },
     key: "message",
+    required: false,
   },
 ];
 
@@ -60,14 +72,8 @@ export default function FeedbackFormPage() {
       style={{ minHeight: "var(--full-height)" }}
     >
       <div className="absolute inset-0 z-0 surveyBG" />
-
-      <div className="perspective-near perspective-origin-center">
-        <div className="transform-3d">
-          <div className="cover"></div>
-        </div>
-      </div>
-      <Card className="relative z-10 w-full max-w-2xl shadow-xl p-6 bg-white/45">
-        <CardContent className="px-0 md:px-6">
+      <BookFlip>
+        <div className="w-full">
           {submitted ? (
             <div className="text-center text-xl font-semibold">
               谢谢您的参与！
@@ -101,8 +107,8 @@ export default function FeedbackFormPage() {
               </div>
             </>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </BookFlip>
     </main>
   );
 }

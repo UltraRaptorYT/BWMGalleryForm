@@ -1,0 +1,194 @@
+
+:root {
+  --dark-color: gray;
+  --subtle-color: rgba(208, 213, 213);
+  --main-color: rgb(249, 255, 255);
+}
+
+.container {
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100%;
+  perspective: 1000px;
+  perspective-origin: center;
+  position: relative;
+}
+
+.book {
+  position: relative;
+  width: min(90vw, 800px); /* wider if needed */
+  height: auto;
+  max-height: 90vh;
+  transform-style: preserve-3d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.book > div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform-origin: top;
+  transition: transform 2s;
+}
+
+.shadow {
+  position: absolute;
+  bottom: 0;
+  width: 60%;
+  box-shadow: 0 8px 16px 8px var(--dark-color);
+  transform: rotateX(10deg);
+}
+
+.cover {
+  position: relative;
+  transform: scaleX(1.05) rotateX(10deg);
+  border: 1px solid var(--dark-color);
+  overflow: hidden;
+}
+
+.cover-end {
+  transform: translateY(10px) rotateX(10deg);
+  border: 1px solid var(--dark-color);
+}
+
+.back {
+  height: 40%;
+  width: 2%;
+  background-color: var(--subtle-color);
+}
+
+.page {
+  background: #ffffff;
+  border: 1px solid var(--subtle-color);
+  box-shadow: 0px 0px 5px var(--subtle-color);
+}
+
+.page.first {
+  transform: translateY(2px) rotateX(10deg);
+}
+
+.page.second {
+  transform: translateY(4px) rotateX(10deg);
+}
+
+.page.third {
+  transform: translateY(6px) rotateX(10deg);
+}
+
+.page.last {
+  transform: translateY(8px) rotateX(10deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: auto;
+  will-change: transform;
+  padding: 2rem;
+}
+
+.page-content {
+  flex-grow: 1;
+  height: 100%; /* 👈 lock height */
+  max-height: 100%; /* prevent overflow */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  border-radius: 0.5rem;
+  transform: rotateX(-10deg);
+  position: relative;
+  min-height: 400px;
+}
+
+.btn-tale {
+  background-color: transparent;
+  border: none;
+  font-size: 1.5rem;
+  /* font-family: "Dancing Script", cursive; */
+  transition: opacity 1s;
+  cursor: pointer;
+}
+
+.cover > img {
+  height: 100%;
+}
+
+.cover {
+  /* background: white; */
+  position: relative;
+  z-index: 10;
+  transform: scaleX(1.05) rotateX(10deg);
+  border: 1px solid var(--dark-color);
+  overflow: hidden;
+  backface-visibility: hidden; /* hides "back" of the element */
+  transform-style: preserve-3d;
+  transition: transform 2s, opacity 1s 2s; /* delay hiding */
+}
+
+.book.open .cover {
+  transform: rotateX(150deg);
+  pointer-events: none;
+}
+
+.book.open .page.first {
+  transform: translateY(2px) rotateX(150deg);
+}
+
+.book.open .page.second {
+  transform: translateY(4px) rotateX(130deg);
+}
+
+.book.open .page.third {
+  transform: translateY(6px) rotateX(110deg);
+}
+
+.book > .page.first {
+  transition-delay: 0.1s;
+}
+
+.book > .page.second {
+  transition-delay: 0.2s;
+}
+
+.book > .page.third {
+  transition-delay: 0.3s;
+}
+
+.cover {
+  transition: transform 2s ease-in-out, opacity 1s ease 1.5s;
+}
+
+.page.first,
+.page.second,
+.page.third {
+  z-index: -1;
+}
+
+.page.last {
+  z-index: 1;
+}
+
+.page-content {
+  z-index: 2;
+  position: relative; /* Needed for z-index to apply */
+}
+
+.cover-end,
+.back {
+  z-index: -3;
+}
+
+.page.last {
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}

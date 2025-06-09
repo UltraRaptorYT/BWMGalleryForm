@@ -3,8 +3,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { toast } from "sonner";
-import { SurveyQuestionType, SurveyValue } from "@/types";
+import { SurveyQuestionType } from "@/types";
 import { SurveyRenderer } from "@/components/SurveyRenderer";
 import { useSurveySubmit } from "@/hooks/useSurveySubmit";
 

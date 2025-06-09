@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { SurveyQuestionType } from "@/types";
 import { SurveyRenderer } from "@/components/SurveyRenderer";
 import { useSurveySubmit } from "@/hooks/useSurveySubmit";

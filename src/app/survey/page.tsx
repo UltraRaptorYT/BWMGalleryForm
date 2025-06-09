@@ -18,10 +18,13 @@ feel a little lighter inside.
 There’s no right or wrong answer today—just your thoughts and feelings. Whatever you share
 stays anonymous and helps us better understand how art can touch people’s hearts and support
 emotional healing.`,
-      ch: `您好，欢迎来到今天的活动！很感谢您抽空来参加。我们相信艺术有一种特殊的力量，能
+      ch: `您好，感谢您抽空参与真如艺术作品展并且愿意参与此次的问卷调查。
+
+
+
+      我们相信艺术有一种特殊的力量，能
 触动内心、唤起回忆，甚至让人感觉轻松一些。
-这里没有标准答案，只需说出您真实的感受就好。所有分享都会保密，我们希望透过这样
-的交流，更了解艺术是怎么影响人、疗愈心灵的。`,
+这里没有标准答案，只需说出您真实的感受就好。所有分享都会保密，我们希望透过这样的交流，更了解艺术是怎么影响人、疗愈心灵的。`,
     },
   },
   {
@@ -237,7 +240,7 @@ export default function SurveyFormPage() {
       <div
         className="absolute inset-0 z-0 opacity-30"
         style={{
-          backgroundImage: "url('/background.jpeg')",
+          backgroundImage: "url('/background.png')",
           backgroundRepeat: "repeat",
           backgroundSize: "contain",
         }}

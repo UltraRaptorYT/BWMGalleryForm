@@ -9,22 +9,6 @@ import { useSurveySubmit } from "@/hooks/useSurveySubmit";
 
 const survey: SurveyQuestionType[] = [
   {
-    qnType: "info",
-    key: "intro",
-    message: {
-      en: `Hi and welcome! Thanks so much for being here. We invited you because we believe art has a
-special way of reaching people — stirring emotions, bringing up memories, or even helping us
-feel a little lighter inside.
-There’s no right or wrong answer today—just your thoughts and feelings. Whatever you share
-stays anonymous and helps us better understand how art can touch people’s hearts and support
-emotional healing.`,
-      ch: `您好，欢迎来到今天的活动！很感谢您抽空来参加。我们相信艺术有一种特殊的力量，能
-触动内心、唤起回忆，甚至让人感觉轻松一些。
-这里没有标准答案，只需说出您真实的感受就好。所有分享都会保密，我们希望透过这样
-的交流，更了解艺术是怎么影响人、疗愈心灵的。`,
-    },
-  },
-  {
     question: {
       en: "What did you feel before the exhibition?",
       ch: "展览前你有什么感受？",
@@ -32,16 +16,14 @@ emotional healing.`,
     qnType: "multi-select",
     key: "before",
     selectionOptions: [
-      { en: "Excited", ch: "兴奋" },
-      { en: "Anxious", ch: "焦虑" },
-      { en: "Happy", ch: "开心" },
-      { en: "Confused", ch: "困惑" },
-      { en: "Hopeful", ch: "充满希望" },
-      { en: "Overwhelmed", ch: "不知所措" },
-      { en: "Inspired", ch: "受到启发" },
-      { en: "Indifferent", ch: "无动于衷" },
-      { en: "Grateful", ch: "感激" },
-      { en: "Curious", ch: "好奇" },
+      { en: "Warmth", ch: "温暖" },
+      { en: "Optimism", ch: "乐观" },
+      { en: "Peace", ch: "平静" },
+      { en: "Gratitude", ch: "感恩" },
+      { en: "Hope", ch: "希望" },
+      { en: "Inspired", ch: "激励" },
+      { en: "Joy", ch: "喜悦" },
+      { en: "Ease", ch: "轻松" },
     ],
   },
   {
@@ -108,7 +90,7 @@ export default function FeedbackFormPage() {
       <div
         className="absolute inset-0 z-0 opacity-30"
         style={{
-          backgroundImage: "url('/background.jpeg')",
+          backgroundImage: "url('/background.png')",
           backgroundRepeat: "repeat",
           backgroundSize: "contain",
         }}

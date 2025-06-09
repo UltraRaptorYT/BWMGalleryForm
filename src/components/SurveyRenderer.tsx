@@ -58,7 +58,7 @@ export function SurveyRenderer({
                   onChange(newVal);
                 }}
               />
-              {opt[lang]}
+              {renderText(opt, showBothLangs, lang)}
             </label>
           ))}
         </div>

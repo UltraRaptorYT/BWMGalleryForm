@@ -12,7 +12,7 @@ export default function BookFlip({ children }: BookFlipProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsOpen(true), 500); // delay optional
+    const timer = setTimeout(() => setIsOpen(true), 1000); // delay optional
     return () => clearTimeout(timer);
   }, []);
 

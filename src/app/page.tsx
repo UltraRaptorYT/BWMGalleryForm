@@ -33,7 +33,7 @@ const survey: SurveyQuestionType[] = [
       ch: "留言",
     },
     qnType: "text",
-    placeholder: { en: "Pen your thoughts...", ch: "placeholder" },
+    placeholder: { en: "Pen your thoughts to the artist", ch: "placeholder" },
     key: "message",
   },
 ];

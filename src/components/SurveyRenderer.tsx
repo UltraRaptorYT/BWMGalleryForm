@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { SurveyQuestionType, SurveyValue } from "@/types";
+import { Heart } from "lucide-react";
 
 type Props = {
   item: SurveyQuestionType;
@@ -75,7 +76,16 @@ export function SurveyRenderer({
                     : [...current, opt.en];
                   onChange(newVal);
                 }}
-                className="rounded-full bg-white/50 border-2 border-blue-300"
+                className="peer sr-only" // hide checkbox but keep it accessible
+              />
+              <Heart
+                strokeWidth={3}
+                className={`w-8 h-8 transition-all duration-200
+              ${
+                current.includes(opt.en)
+                  ? "text-red-500 fill-red-500"
+                  : "text-blue-300"
+              }`}
               />
               {renderText(opt, showBothLangs, lang)}
             </label>

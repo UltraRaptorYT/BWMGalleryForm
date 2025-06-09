@@ -174,7 +174,7 @@ emotional healing.`,
       ch: "今天的体验里，还有没有什么是您想补充或分享的？",
     },
     qnType: "text",
-    placeholder: { en: "Reason", ch: "原因" },
+    placeholder: { en: "Additional thoughts", ch: "其他想法" },
     key: "anyClosingThoughts",
   },
   {

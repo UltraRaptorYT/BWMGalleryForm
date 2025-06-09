@@ -29,11 +29,11 @@ const survey: SurveyQuestionType[] = [
   },
   {
     question: {
-      en: "Your message",
+      en: "Reflections",
       ch: "留言",
     },
     qnType: "text",
-    placeholder: { en: "Write your thoughts...", ch: "placeholder" },
+    placeholder: { en: "Pen your thoughts...", ch: "placeholder" },
     key: "message",
   },
 ];
@@ -69,10 +69,10 @@ export default function FeedbackFormPage() {
       <Card className="relative z-10 w-full max-w-2xl shadow-xl p-6 bg-white/45">
         <CardContent className="px-0 md:px-6">
           {submitted ? (
-            <div className="text-center text-xl font-semibold text-green-600">
-              🎉 Thank you for your feedback!
+            <div className="text-center text-xl font-semibold">
+              谢谢您的参与！
               <br />
-              🎉 感谢你的反馈！
+              Your participation is greatly appreciated!
             </div>
           ) : (
             <>

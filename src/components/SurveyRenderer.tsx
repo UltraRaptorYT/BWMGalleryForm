@@ -33,7 +33,7 @@ export function SurveyRenderer({
         <div className="flex flex-col w-full">
           <span className="whitespace-nowrap w-full">{text.ch}</span>
           <span className="w-full">
-            {text.en}{" "}
+            {text.en}
             {required !== false && <span className="text-red-500 ml-1">*</span>}
           </span>
         </div>

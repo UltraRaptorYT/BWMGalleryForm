@@ -118,7 +118,7 @@ export function SurveyRenderer({
         </Label>
         <Textarea
           className={cn(
-            "text-lg placeholder:text-lg md:text-lg h-36 bg-white/75 border-blue-300",
+            "text-lg placeholder:text-lg md:text-lg h-36 bg-white/75 border-blue-300 focus:outline-blue-300",
             item.key === "name" &&
               "font-cursive md:text-3xl text-center placeholder:text-xl text-3xl"
           )}

@@ -10,11 +10,11 @@ import BookFlip from "@/components/BookFlip";
 const survey: SurveyQuestionType[] = [
   {
     question: {
-      en: "Name",
-      ch: "姓名",
+      en: "Please leave your name",
+      ch: "请留下您的名字",
     },
     qnType: "text",
-    placeholder: { en: "Enter your name", ch: "请输入您的姓名" },
+    placeholder: { en: "A gentle trace of your presence.", ch: "请留下您的名字" },
     key: "name",
     required: true,
   },

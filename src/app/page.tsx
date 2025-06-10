@@ -14,7 +14,10 @@ const survey: SurveyQuestionType[] = [
       ch: "请留下您的名字",
     },
     qnType: "text",
-    placeholder: { en: "A gentle trace of your presence.", ch: "请留下您的名字" },
+    placeholder: {
+      en: "A gentle trace of your presence.", 
+      ch: "请留下您的名字" 
+    },
     key: "name",
     required: true,
   },

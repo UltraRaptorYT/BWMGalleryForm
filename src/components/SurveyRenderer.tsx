@@ -120,7 +120,7 @@ export function SurveyRenderer({
           className={cn(
             "text-lg placeholder:text-lg md:text-lg h-36 bg-white/75 border-blue-300",
             item.key === "name" &&
-              "font-cursive md:text-3xl text-center placeholder:text-3xl text-3xl"
+              "font-cursive md:text-3xl text-center placeholder:text-xl text-3xl"
           )}
           value={typeof value === "string" ? value : ""}
           onChange={(e) => onChange(e.target.value)}

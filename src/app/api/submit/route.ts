@@ -20,7 +20,8 @@ export async function POST(req: Request) {
   const { searchParams } = new URL(req.url);
   const submitType = searchParams.get("submitType");
 
-  const data = await req.json();
+  const { responses, keys } = await req.json();
+
   const SHEET_ID = process.env.SHEET_ID!;
   const SHEET_NAME =
     process.env[submitType === "survey" ? "SURVEY_SHEET_NAME" : "SHEET_NAME"] ||
@@ -33,9 +34,10 @@ export async function POST(req: Request) {
 
     const rowValues = [
       timestamp,
-      ...Object.values(data).map((val) =>
-        Array.isArray(val) ? val.join(", ") : String(val)
-      ),
+      ...keys.map((key: string) => {
+        const val = responses[key];
+        return Array.isArray(val) ? val.join(", ") : String(val ?? "");
+      }),
     ];
 
     await sheets.spreadsheets.values.append({

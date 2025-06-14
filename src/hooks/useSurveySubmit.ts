@@ -64,7 +64,10 @@ export function useSurveySubmit({
       const res = await fetch(submitUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(responses),
+        body: JSON.stringify({
+          responses,
+          keys: survey.map((q) => q.key),
+        }),
       });
 
       if (!res.ok) throw new Error();
